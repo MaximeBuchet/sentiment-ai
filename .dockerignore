@@ -1,0 +1,10 @@
+# .dockerignore — exclure du contexte de build Docker
+.git/
+__pycache__/
+*.pyc
+.env
+venv/ .venv/
+data/ models/
+.pytest_cache/
+.coverage htmlcov/
+README.md
