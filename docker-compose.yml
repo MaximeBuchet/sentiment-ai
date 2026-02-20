@@ -1,0 +1,32 @@
+# docker-compose.yml
+version: '3.9'
+
+services:
+
+  api:
+    build: .
+    container_name: sentiment-api
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=info
+    depends_on:
+      redis:
+        condition: service_healthy # attend que Redis soit prêt
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: sentiment-redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  redis_data:
