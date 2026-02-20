@@ -205,3 +205,11 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Ajout pour le TP
+.env
+models/
+*.pkl *.bin
+data/
+.coverage
+htmlcov/
