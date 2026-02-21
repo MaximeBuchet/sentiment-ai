@@ -6,7 +6,7 @@ pipeline {
         // Nom de l'image Docker
         IMAGE_NAME = 'sentiment-ai'
         // Registry GitHub (remplacez VOTRE_PSEUDO)
-        REGISTRY = 'ghcr.io/MaximeBuchet'
+        REGISTRY = 'ghcr.io/MaximeBuchet'.toLowerCase()
         // Tag = 7 premiers caractères du SHA Git
         IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout:true).trim()
     }
@@ -62,7 +62,8 @@ pipeline {
         stage('Push') {
             // Ce stage ne s'exécute QUE sur la branche main
             when {
-                branch 'main'
+                //branch 'main'
+                expression { env.GIT_BRANCH?.endsWith('/main') }
             }
             steps {
                 // Se connecter au registry avec les credentials Jenkins

@@ -16,9 +16,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copier le code source
 COPY src/ ./src/
+# Copier les tests
+COPY tests/ ./tests/
 
 # Sécurité : ne PAS tourner en root
-RUN adduser --disabled-password --gecos '' appuser
+RUN adduser --disabled-password --gecos '' appuser \
+    && chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8000
