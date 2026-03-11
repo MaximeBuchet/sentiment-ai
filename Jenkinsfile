@@ -77,22 +77,26 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
+                        WORKDIR=$(docker inspect --format '{{.Config.WorkingDir}}' $IMAGE_NAME:$IMAGE_TAG)
+                        WORKDIR=${WORKDIR:-/}
+
                         docker run --rm \
                             --network cicd-network \
                             --volumes-from jenkins \
-                            -w "$WORKSPACE" \
+                            -v "$WORKSPACE":$WORKDIR \
+                            -w "$WORKDIR" \
                             -e SONAR_HOST_URL="$SONAR_HOST_URL" \
                             -e SONAR_TOKEN="$SONARQUBE_TOKEN" \
                             sonarsource/sonar-scanner-cli:latest \
                             sonar-scanner \
                             -Dsonar.projectKey=sentiment-ai \
                             -Dsonar.projectName=SentimentAI \
-                            -Dsonar.projectBaseDir="$WORKSPACE" \
+                            -Dsonar.projectBaseDir="$WORKDIR" \
                             -Dsonar.sources=src \
                             -Dsonar.python.version=3.11 \
                             -Dsonar.python.coverage.reportPaths=coverage.xml \
                             -Dsonar.sourceEncoding=UTF-8 \
-                            -Dsonar.scanner.metadataFilePath=$WORKSPACE/report-task.txt
+                            -Dsonar.scanner.metadataFilePath=$WORKDIR/report-task.txt
                         '''
                 }
             }
