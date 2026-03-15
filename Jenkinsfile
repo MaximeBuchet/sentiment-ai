@@ -172,12 +172,12 @@ pipeline {
                 // Simulation : en vrai, ce serait un appel kubectl, docker stack deploy, etc.
                 sh '''
                     # Arrêter l'éventuel staging précédent
-                    docker compose -f docker-compose.yml \
+                    docker-compose -f docker-compose.yml \
                     -p staging down 2>/dev/null || true
 
                     # Démarrer la nouvelle version en staging
                     IMAGE_TAG=''' + "${IMAGE_TAG}" + ''' \
-                    docker compose -f docker-compose.yml \
+                    docker-compose -f docker-compose.yml \
                         -p staging up -d
 
                     echo "Staging disponible sur http://localhost:8001"
@@ -195,7 +195,7 @@ pipeline {
         }
         always {
             // Nettoyer les conteneurs de test
-            sh 'docker compose down -v 2>/dev/null || true'
+            sh 'docker-compose down -v 2>/dev/null || true'
         }
     }
 }
