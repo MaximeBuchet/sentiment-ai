@@ -164,7 +164,7 @@ pipeline {
         }
         stage('Deploy Staging') {
             when {
-            branch 'main'
+                expression { env.GIT_BRANCH?.endsWith('/main') }
             }
             steps {
                 echo "Deploiement de ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} en staging..."
